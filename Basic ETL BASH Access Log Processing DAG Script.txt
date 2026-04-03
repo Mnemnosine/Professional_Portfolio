@@ -1,0 +1,86 @@
+# This is the basic BASH DAG script
+# Follow the same steps as Basic ETL Server Access Log to create a new python script.
+# Copy and paste the script below from "import the libraries" to the *** only
+# Once the script below has been pasted, scroll to the bottom of this script for setting the AIRFLOW_HOME and continue the steps from there
+
+# import the libraries
+
+from datetime import timedelta
+# The DAG object; we'll need this to instantiate a DAG
+from airflow.models import DAG
+# Operators; you need this to write tasks!
+from airflow.operators.bash_operator import BashOperator
+# This makes scheduling easy
+from airflow.utils.dates import days_ago
+
+# defining DAG arguments - this is where the start date for the DAG is defined 
+# start date can also be expressed as 'datetime(YYYY,MM,DD)
+
+# You can override them on a per-task basis during operator initialization
+default_args = {
+    'owner': 'your_name_here',
+    'start_date': days_ago(0),
+    'email': ['your_email_here'],
+    'retries': 1,
+    'retry_delay': timedelta(minutes=5),
+}
+
+# define the DAG aka DAG Definition Block
+# schedule_interval can also be expressed in seconds as 'schedule = timedelta(seconds=#)
+dag = DAG(
+    'my-first-dag',
+    description='My first DAG'
+    default_args=default_args,
+    schedule_interval=timedelta(days=1),
+)
+
+# Task Definition Block
+# define the first task 
+# task1 is Extract and task2 is transform_and_load or can be transform or can be load depending on the nature of the pipeline
+
+extract = BashOperator(
+    task_id='extract',
+    bash_command='cut -d":" -f1,3,6 /etc/passwd > /home/project/airflow/dags/extracted-data.txt',
+    dag=dag,
+)
+
+# define the second task
+transform_and_load = BashOperator(
+    task_id='transform',
+    bash_command='tr ":" "," < /home/project/airflow/dags/extracted-data.txt > /home/project/airflow/dags/transformed-data.csv',
+    dag=dag,
+)
+
+# Define the dependencies in the task pipeline
+# syntax for this is task1 >> task2 >> task3 >> task4
+
+extract >> transform_and_load
+
+***
+
+# This is to set the AIRFLOW_HOME
+# $ export AIRFLOW_HOME=/home/project/airflow
+# $ echo $AIRFLOW_HOME
+
+# Once done, verify that the DAG was submitted
+# run $ airflow dags list
+# check the resulting list, and then look at the Airflow DAG web dashboard if available to confirm
+# Verify that the dag is a part of the output by running $ airflow dags list | grep "<DAG file>.py"
+
+# Once confirmed, run the following command to list out all the tasks in the dag
+# $ airflow tasks list <DAG> (leave out the .py suffix)
+
+# once the script is complete, run the dag script before submitting the DAG
+# $ airflow <DAG>.py
+# This should tell you how many tasks are in the output
+
+# Submit the DAG by running the following command: $ cp <DAG>.py $AIRFLOW_HOME/dags
+
+# Example below
+# In a separate terminal window, type 'export AIRFLOW_HOME=/home/project/airflow/dags/finalassignment
+# Then type 'cp ETL_toll_data.py $AIRFLOW_HOME/dags
+# Then type 'airflow dags list to verify presence
+# Then type 'airflow dags list | grep "ETL_toll_data" to verify output
+# Then type 'airflow tasks lists ETL_toll_data' to list out all tasks in the dag
+
+
