@@ -1,0 +1,47 @@
+# Standard Data Analysis Library loadout:
+
+import numpy as np # operational library that does multidimensional arrays
+import pandas as pd # This provides the read.csv and read.<file> function
+import seaborn as sns # Use this for statistical visualizations in combination with matplotlib
+import datetime as dt # operational library
+import matplotlib.pyplot as plt # Go-to library for basic visualizations
+# Can also be defined as 'from matplotlib import pyplot as plt'.
+
+import plotly.express as px # use for presentations or publications, graphing, interactive
+import scikit-learn as skl # basic machine learning library
+import mlxtend as mlx
+
+
+# Standard Data Engineering/Programming Library loadout: 
+import pyspark as py # integrates Spark with Python or vice versa
+import findspark as fs
+import pandas as pd
+
+# Alternative load commands for Jupyter notebook assuming !pip necessity
+!pip install pyspark
+!pip install findspark
+!pip install pandas
+
+
+# Additional libraries and clients that can be downloaded for Python for data analysis or data engineering
+
+from pymongo import MongoClient # This is for working with MongoDB 
+uri = “mongodb://<USER>:<PASSWORD>@uri/test”
+Client = MongoClient(uri) # only do this ONCE 
+<database_DB> = client.<database_DB_2>
+<database_DB_3> = <database_DB>.<database_DB_3>
+
+
+# Importing Spark Libraries
+
+from pyspark.sql import SparkSession
+from pyspark import SparkContext, SparkConf
+from pyspark.sql.functions import year, quarter, to_date, sum, when, lit, avg, col, max, count
+from pyspark.sql.types import StructType, IntegerType, FloatType, StringType, StructField
+
+# Packages for machine learning
+import sklearn # library for supervised AND unsupervised ML
+import sklearn.metrics as metrics # for confusion matrix
+from scipy import stats # as needed to manipulate and visualize statistical data
+import statsmodels.api as sm # a model that allows data exploration and perform statistical tests
+import scikit-learn
