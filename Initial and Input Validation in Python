@@ -1,0 +1,407 @@
+# 1) Load the new csv without any Unicode errors using the read_csv function of pandas
+
+df = pd.read_csv('messy_data.csv')
+except UnicodeDecodeError:
+
+# (include this for the second attempt with a common alternative)
+df = pd.read_csv('messy_data.csv', encoding='latin-1')
+
+# Second, run this so pandas displays all columns
+pd.set_option(‘display.max_columns’, None)
+
+# Third, if there are weird delimiters in the data
+
+# If the file uses semicolons
+df = pd.read_csv('messy_data.csv', sep=';')
+
+# If the file uses tabs (TSV)
+df = pd.read_csv('messy_data.csv', sep='\t')
+
+# Fourth, if the columns import incorrectly.
+
+df = pd.read_csv(‘messy_data.csv’, dtype={‘price’: float, ‘quantity’: ‘Int64’})
+
+
+# 2) For getting the shape, information, and description of any new dataframes:
+
+# First, take a look at the new dataframe to get the idea of the shape of it. 
+
+# use print() to get the shape information - note that .shape is an attribute and no () are allowed
+# Syntax is print(df_variable.shape)
+# Or, simply input the df directly per below:
+
+df = pd.read_csv('Messy_data.csv')
+df
+
+# Output should read ## rows x ## columns
+
+# Second, use .info() method to get the full information of the data columns along with the data types of the first five rows.
+# Syntax is df_variable.info()
+
+# Include dtypes to identify what the data types of the columns are, in dot notation.
+# Syntax is df_variable.dtypes
+
+# Third, combine these two into two commands to execute in the editor/notebook:
+# print(df_variable.shape)
+df_variable.info()
+
+# Fourth, use .describe() to catch odd and/or impossible values, plus mean, standard deviation, and range of the numerical columns in the dataset. 
+# Syntax should be df_variable.describe()
+df_variable.describe()
+
+# Using df.describe(include = ‘all’) will cover every single parameter possible. 
+df_variable.describe(include = ‘all’) 
+
+# To get describe() feedback for one column:
+df_variable[‘Target Column’].describe()
+
+
+# Fifth, to isolate any rows where a value is negative or positive.
+df_variable[df_variable[‘Target Column’].describe()  > <value>]
+
+# where the operator can be >, <, >=, <=, ==, or /= and then the <value>
+
+# 3) For sorting out new variables by a given column
+
+# Write the syntax in one line of code as follows: new_variable = variable.sort_values(by='AQI', ascending=False)
+top3_sorted = top3.sort_values(by='aqi', ascending=False)
+
+# 4) for using the .head() function
+
+# Print the top 10 rows of top3_sorted as follows: "top3_sorted.head(10)"
+top3_sorted.head(10)
+
+# Use a standard .head() function here appended to the new ca_df variable.
+ca_df.head()
+
+# The same process above can be followed for understanding the bottom boundary with .tail()
+
+# 5) for finding and quantifying missing data through counting up the nulls in a dataset
+
+# Using the Sum() function
+# Syntax for the sum function is as follows:
+# <function>.sum(‘<Target_field>’)
+
+# This can be done by using df_variable.isnull().sum() in dot notation.
+df_variable_isnull().sum()
+# OR
+df_variable_isna().sum(
+
+# 6) Standardize all column names 
+# The Standardization Command
+df.columns = df.columns.str.lower().str.replace(' ', '_').str.strip()
+# Before: ['Employee_ID', 'First_Name', 'Phone']
+# After: ['employee_id', 'first_name', 'phone']
+
+# 7) Fixing Data Types and Corruption in the table
+# Fix the identified dtype immediately
+# Note: The column name is now 'phone' due to standardization in 3.1
+df_variable['column1'] = df['column1'].astype(str)
+
+# 8) handling Missing values in datasets
+# .dropna()
+#     1. Removal: Drop rows missing the identified critical '<term>' data
+df_variable.dropna(subset=['column2'], inplace=True)
+
+#     2. Imputation: Fill missing '<dtype>' with the median where dtype is an integer or float
+replacement_variable = df['column3'].median()
+df_variable['column3'].fillna(replacement_variable, inplace=True)
+
+# Then recheck the null counts for the identified data sets
+df[‘column2’].isnull().sum())
+df[‘column3’].isnull().sum())
+
+# Output should read np.int64(0)
+
+# 9) For using the .value_count () method, duplicates, unique values
+
+# To examine the unique values in a given column 
+# Syntax should be df_variable.column_name.value_counts().
+ca_df.county_name.value_counts()
+
+# Syntax should be df_variable.duplicated().sum() in dot notation
+df_variable.duplicated().sum()
+# if the result is 0, then there are no duplicates. 
+
+# Syntax should be df_variable.nunique() in dot notation.
+df_variable.nunique()
+
+# Syntax for dropping duplicates should be df_variable.drop_duplicates()
+
+# 10) For using the iloc function to split and select
+
+# The syntax for this should be 'top3_sorted.iloc[10:12]'
+# This should return rows 10 and 11
+top3_sorted.iloc[10:12]
+
+# .loc[] can be used along with the names of the rows and columns in a similar fashion. 
+
+
+# 11) Using .show() in a dataframe to construct and display a table or show a column
+# This can be done in Spark SQL or in standard Python/pandas. Show will only list the top 20 rows unless specified otherwise. 
+
+# Spark example is as follows using dot notation via SQL query
+spark.sql(“SELECT <Target_Field> FROM <Table>”).show()
+
+# DataFrame API example:
+df_variable.select(“<Target_Field>”).show()
+df_variable.select(df_variable[“name”]).show()
+
+# Output should look something like the following: 
++-----------------+----+---+-----+---+----+-----+-----+---+---+----+----+
+|       Unnamed: 0| mpg|cyl| disp| hp|drat|   wt| qsec| vs| am|gear|carb|
++-----------------+----+---+-----+---+----+-----+-----+---+---+----+----+
+|        Mazda RX4|21.0|  6|160.0|110| 3.9| 2.62|16.46|  0|  1|   4|   4|
+|    Mazda RX4 Wag|21.0|  6|160.0|110| 3.9|2.875|17.02|  0|  1|   4|   4|
+|       Datsun 710|22.8|  4|108.0| 93|3.85| 2.32|18.61|  1|  1|   4|   1|
+|   Hornet 4 Drive|21.4|  6|258.0|110|3.08|3.215|19.44|  1|  0|   3|   1|
+|Hornet Sportabout|18.7|  8|360.0|175|3.15| 3.44|17.02|  0|  0|   3|   2|
++-----------------+----+---+-----+---+----+-----+-----+---+---+----+----+
+only showing top 5 rows
+
+stg.select(‘mpg’).show(5)
+
+# Output should look something like the following:
++----+
+| mpg|
++----+
+|21.0|
+|21.0|
+|22.8|
+|21.4|
+|18.7|
++----+
+only showing top 5 rows
+
+
+# Spark will use .show() to show columns and rows, when a dataframe is set to show a certain number of columns and then a certain number of rows
+
+df_variable = [‘Column1’, ‘Column2’, ‘Column3’, ‘Column4’, …]
+
+df_variable_2.select(df_variable).show(5)
+# will then show the first 5 rows of the selected columns listed in df_variable.
+
+# 12) For reading csv files prior to reading into a dataframe
+
+# Syntax for doing this is as follows:
+# variable = pd.read_csv('<target_csv_file')
+variable = pd.read_csv('some_fucking_shit.csv')
+
+# Append the head() function to the variable to look at the first five rows.
+# Similar terminology for doing this is "pass the file name to the pd.read_csv() function as a string" or,
+# "Use the head() method on the <name> dataframe to inspect the first five rows."
+# The syntax for doing this is "variable.head()".
+variable.head()
+
+
+# 13) Using Filtering and Columnar Operations in conjunction with .Show()
+
+# Use this to identify and select relevant data and apply useful transformations.
+# Filter function
+# Starting with the .filter() function, which uses >, <, =, >=, or <= operators.
+
+df_variable.filter(df_variable[‘<Target_Column>’] <operator> <value>).show()
+# OR
+df_variable.filter(“transaction_amount > 1000”)
+
+# Example as follows:
+sdf.filter(sdf[‘mpg’] < 18).show(5)
+
+# Output should look something like this:
++-----------+----+---+-----+---+----+----+-----+---+---+----+----+
+| Unnamed: 0| mpg|cyl| disp| hp|drat|  wt| qsec| vs| am|gear|carb|
++-----------+----+---+-----+---+----+----+-----+---+---+----+----+
+| Duster 360|14.3|  8|360.0|245|3.21|3.57|15.84|  0|  0|   3|   4|
+|  Merc 280C|17.8|  6|167.6|123|3.92|3.44| 18.9|  1|  0|   4|   4|
+| Merc 450SE|16.4|  8|275.8|180|3.07|4.07| 17.4|  0|  0|   3|   3|
+| Merc 450SL|17.3|  8|275.8|180|3.07|3.73| 17.6|  0|  0|   3|   3|
+|Merc 450SLC|15.2|  8|275.8|180|3.07|3.78| 18.0|  0|  0|   3|   3|
++-----------+----+---+-----+---+----+----+-----+---+---+----+----+
+only showing top 5 rows
+
+# Operating on Columns
+
+# Using the .withColumn() function, being able to specify entire columns for operations, including arithmetic. This can be paired with other functions via dot notation, such as .show().
+
+df_variable.withColumn(‘<new_column>’, df_variable[‘<Target_Column>’] <operator> <value>)
+
+# Example as follows:
+sdf.withColumn(‘wtTon’, sdf[‘wt’] * 0.45).show(5)
+
++-----------------+----+---+-----+---+----+-----+-----+---+---+----+----+-------+
+|       Unnamed: 0| mpg|cyl| disp| hp|drat|   wt| qsec| vs| am|gear|carb|  wtTon|
++-----------------+----+---+-----+---+----+-----+-----+---+---+----+----+-------+
+|        Mazda RX4|21.0|  6|160.0|110| 3.9| 2.62|16.46|  0|  1|   4|   4|  1.179|
+|    Mazda RX4 Wag|21.0|  6|160.0|110| 3.9|2.875|17.02|  0|  1|   4|   4|1.29375|
+|       Datsun 710|22.8|  4|108.0| 93|3.85| 2.32|18.61|  1|  1|   4|   1|  1.044|
+|   Hornet 4 Drive|21.4|  6|258.0|110|3.08|3.215|19.44|  1|  0|   3|   1|1.44675|
+|Hornet Sportabout|18.7|  8|360.0|175|3.15| 3.44|17.02|  0|  0|   3|   2|  1.548|
++-----------------+----+---+-----+---+----+-----+-----+---+---+----+----+-------+
+only showing top 5 rows
+
+# 14) Sorting datasets based on targeted columns in ascending or descending order.
+# Syntax is as follows:
+# df_variable.sort_values(by='<target_column>', ascending/descending=True/False).head()
+
+# 15A) converting a ‘date’ column to datetime, where ‘date’ can be assumed to represent any generic date column that isn’t DATETIME in Python.
+df_variable[‘date’] = pd.to_datetime(df_variable[‘date’])
+
+# 15B) Creating & adding a new column type within an existing dataframe that is DATETIME-related. Key words here are "add a new column" and any date/time references.
+# This is adding on a new column at the right end (default) of the dataframe.
+# Syntax is going to be:
+# df_variable["New/Derivative Column"] = pd.to_datetime(df_variable["Source/Target column"]).<appropriate function in dot notation here>.<appropriate method in dot notation here>
+# EXAMPLE: df_companies['Year Joined'] = pd.to_datetime(df_companies['Date Joined']).dt.year
+
+# 15C) creating two new datetime columns, focusing on Months; assume ‘date’ is a generic non-datetime column with non-datetime date values. 
+df_variable[‘month’] = df_variable[‘date’].dt.month
+df_variable_[‘month_txt’] = df_variable[‘date’].dt.month_name().str.slice(stop=3)
+
+# 15D) grouping data by ‘month’ and ‘month_txt’, summed, and sorted, and assigning the result to a new df.
+df_variable_by_month = df_variable.groupby([‘month’, month_txt’]).sum().sort_values(‘month’, ascending=True).head(10)
+df_variable_by_month
+
+# 16) Using the method .strip()
+# .strip() is a method applied to a string that contains all the characters that need to be removed from the beginning and end of a string--in any order.
+# Syntax is as follows:
+#    df_string/variable = '#......... Section 3.2.1 Issue #32 ........'
+#    df_string/variable - df_string/variable.strip('.#! ')
+#    print(df_string/variable)
+#
+#    'Section 3.2.1 Issue # 32' where all extemporaneous '.', '#', '!', and ' ' have been removed.
+
+# 17) Using the method .apply()
+# .apply() is a method that can be used on a DataFrame or Series object. The method accepts a function as an argument and applies that function to each value in the series. 
+# Syntax is as follows:
+# df_series/variable = pd.Series([#, #, #, #])
+# df_series/variable = df_series/variable.apply(<sub-method such as 'square'>)
+
+
+# 18) Concatenating two dataframes together***
+
+# First, start with inspecting the two dfs top-and-bottom to confirm if columns and data types align.
+# use print([<df_variable.head()]) for both
+print([top3.head()])
+print([other_states.head()])
+
+# Syntax for adding the data should be as follows:
+# combined_df = pd.concat([df1, df2], axis=0)
+combined_df = pd.concat([top3, other_states], axis=0)
+print([combined_df.head(10)])
+
+
+# Get the shape and info for the new df 'combined_df'
+print(combined_df.shape)
+combined_df.info()
+
+print ('and now for the the formal len check to confirm that totals match')
+
+
+# 19) Adding New Columns in Spark, renaming existing columns, and also assigning the result to a new df
+# Add a new column via .withColumn()
+
+df_variable.withColumn(‘<new_column>’, ‘df_variable[‘Target_Column’] <operation> <value>’)
+
+# Example is as follows:
+sdf.withColumn(‘kmpl’, sdf[‘mpg’] * 0.425)
+
+# OR 
+
+# Syntax is as follows: 
+df_variable = df_variable.withColumn("<New_column_name>", when(df_variable.<Target_column_1> > <target_value>, lit("<Target_response_value>")).otherwise(lit("<Target_response_value_2>")))
+
+# Note the variable operator in BOLD - this can be multiple operators
+
+# Example is as follows:
+# Add a new column named 'high_value' to df1 indicating whether the 'transaction_amount' is > 5000. When the value is > 5000, the value of the column == 'Yes'. When the value is <= 5000, the value of the
+# column should == 'No'. 
+
+df1 = df1.withColumn("high_value", when(df1.transaction_amount > 5000, lit("Yes”)).otherwise(lit("No")))
+
+# Renaming columns
+
+# The first example is renaming a column name in an existing df.
+
+df_variable = df_variable.withColumnRenamed(‘<current_name>’, ‘<new_name>’)
+
+# The second example iis transforming an existing df into a new df, and renaming a current column in the existing df to a new name that will carry over to the new df. 
+
+df_variable_new_name = df_variable.withColumnRenamed(‘<current_name>’, ‘<new_name>’)
+
+# Example is as follows:
+sdf_new = sdf.withColumnRenamed(‘vs’, ‘versus’)
+20) Using Groupby and Aggregation in a DataFrame (Spark and others)
+# Spark DataFrames (and other dataframe platforms) support functions to aggregate data after grouping. 
+
+# the basic groupby function
+# the basic groupby function is 
+.groupby([‘<value>’]); 
+the basic aggregation function is
+.agg({‘<Target_Column>’})
+
+# An example of grouping one column’s values by the order of a second column is as follows. Note the usage of .mean() in dot notation at the end of the formula, as this is a common best practice:
+
+df_variable.groupby(‘Primary_Target_Column’)[‘Secondary_Target_Column’].mean()
+
+taxi_data.groupby('payment_type')['fare_amount'].mean()
+
+# In Spark, the syntax for both functions is as follows:
+# NOTE: in Jupyter Notebooks where PySpark is being used, the syntax for groupby is:
+.groupBy() # the first letter of the second word is always capitalized in the function
+
+df_variable.groupBy([‘<value>’])\
+.agg({‘<Target_Column>’: ‘<operation>’})\
+
+# Example and output are as follows:
+sdf.groupBy(['cyl'])\
+.agg({"wt": "AVG"})\
+.show(5)
+
++---+-----------------+
+|cyl|          avg(wt)|
++---+-----------------+
+|  6|3.117142857142857|
+|  8|3.999214285714286|
+|  4|2.285727272727273|
++---+-----------------+
+# Sort can also be added to this sequence in Spark (and possibly other platforms) as follows:
+
+df_variable.groupBy([‘<value>’])\
+.agg({‘<Target_Column>’: ‘<operation>’})\
+.sort(‘<function>(‘<Target_Column>’)’, ascending=<False OR True>)\
+
+# Example and output are as follows:
+car_counts = sdf.groupBy(['cyl'])\
+.agg({"wt": "count"})\
+.sort("count(wt)", ascending=False)\
+.show(5)
+
++---+---------+
+|cyl|count(wt)|
++---+---------+
+|  8|       14|
+|  4|       11|
+|  6|        7|
++---+---------+
+
+# 21) Use len to see if the total of combined_df rows equals the sum of the original df + revised df
+# Syntax is as follows: len(combined_df) == len(original_df) + len(revised_df)
+len(combined_df) == len(top3) + len(other_states)
+
+# 22) Shortening large numbers via a 'readable_numbers' function:
+def readable_numbers(x):
+"""takes a large number and formats it into K,M to make it more readable"""
+    if x >= 1e6: # where '1e6' refers to any number that is 6 digits long
+        s = '{:1.1f}M'.format(x*1e-6)
+    else:
+	s = '{:1.0f}K'.format(x*1e-3)
+    return s
+
+# Use the readable_numbers() function to create a new column
+df['<new_column_name>']=df['target_column'].apply(readable_numbers)
+
+
+# 23) How to identify and get rid of duplicates
+
+# purging duplicate data points from two or more columns in order to get unique points
+df_variable = df[[‘target_column_1’, ‘target_column_2’]].drop_duplicates()
+df_variable.head() 
