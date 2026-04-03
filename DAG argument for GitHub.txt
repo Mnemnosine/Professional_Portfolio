@@ -1,0 +1,118 @@
+# Import the necessary libraries
+from datetime import timedelta
+from airflow.models import DAG
+from airflow.operators.python import PythonOperator
+from airflow.operators.bash import BashOperator
+from airflow.utils.dates import days_ago
+import requests
+
+# Define the path for the input and output files
+input_file = '/Path/To/airflow/dags/accesslog.txt'
+extracted_file = '/Path/To/airflow/dags/extracted_data.txt'
+transformed_file = '/Path/To/airflow/dags/transformed_data.txt'
+output_file = '/Path/To/airflow/dags/weblog.tar'
+
+# You can override them on a per-task basis during operator initialization
+default_args = {
+    'owner': 'Dan_Baldwin',
+    'start_date': days_ago(1),
+    'email': ['baldwindan@gmail.com'],
+    'retries': 1,
+    'retry_delay': timedelta(minutes=5),
+}
+
+# Define the DAG
+dag = DAG(
+    'process_web_log',
+    default_args=default_args,
+    description='capstone_DAG_in_Apache_Airflow',
+    schedule_interval=timedelta(days=1),
+)
+
+import shutil
+
+def download_file():
+    source_path = '/Path/To/airflow/dags/accesslog.txt'
+    destination_path = input_file  # e.g., 'access-log.txt' or full path
+    
+    shutil.copy(source_path, destination_path)
+    print(f"File copied successfully from {source_path} to {destination_path}")
+
+# Define the task named download to call the `download_file` function
+download = PythonOperator(
+    task_id='download_data',
+    python_callable=download_file,
+    dag=dag,
+)
+
+def extract():
+    input_file = '/Path/To/airflow/dags/accesslog.txt'
+    output_file = '/Path/To/airflow/dags/extracted_data.txt'
+    
+    with open(input_file, 'r') as infile, open(output_file, 'w') as outfile:
+        for line in infile:
+            # Assuming the IP address is the first field in each line separated by space
+            ip_address = line.split()[0]  
+            outfile.write(ip_address + '\n')
+
+# Define the task named execute_extract to call the `extract` function
+execute_extract = PythonOperator(
+    task_id='extract_data',
+    python_callable=extract,
+    dag=dag,
+)
+
+def transform():
+    global extracted_file, transformed_file
+    print("Inside Transform")
+    with open(extracted_file, 'r') as infile, open(transformed_file, 'w') as outfile:
+        for line in infile:
+            ip_address = line.strip()
+            if ip_address == "198.46.149.143":
+                # Skip this IP address
+                continue
+            # Process the line as needed, for example converting to uppercase
+            processed_line = ip_address.upper()
+            outfile.write(processed_line + '\n')
+
+# Define the task named execute_transform to call the `transform` function
+execute_transform = PythonOperator(
+    task_id='transform_data',
+    python_callable=transform,
+    dag=dag,
+)
+
+def load():
+    global transformed_file, output_file
+    print("Inside Load")
+    # Save the array to a CSV file
+    with open(transformed_file, 'r') as infile, \
+            open(output_file, 'w') as outfile:
+        for line in infile:
+            outfile.write(line)
+
+# Define the task named execute_load to call the `load` function
+execute_load = PythonOperator(
+    task_id='load_data',
+    python_callable=load,
+    dag=dag,
+)
+
+def check():
+    global output_file
+    print("Inside Check")
+    # Save the array to a CSV file
+    with open(output_file, 'r') as infile:
+        for line in infile:
+            print(line)
+
+# Define the task named execute_load to call the `load` function
+execute_check = PythonOperator(
+    task_id='check_data',
+    python_callable=check,
+    dag=dag,
+)
+
+# Task pipeline
+download >> execute_extract >> execute_transform >> execute_load>> execute_check
+
