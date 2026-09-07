@@ -2,17 +2,15 @@
 
 ### Business & Data Analyst, Data Engineer, Project Manager
 
-- Currently working on **Earning a certification in Advanced Data Analytics, then working on understanding Machine Learning algorithms and engineering practices.**
+- Currently working on **Earning a certification in Machine Learning.**
 
-- Currently learning **Python, Apache Spark ML, Regression Modelling, and Machine Learning.**
+- Currently learning **Neural networks and Deep Learning.**
 
 - Looking to collaborate on **open source projects that require a data analyst, or machine learning coding**
 
-- Looking for help with **Understanding and mastering the basics of problem-solving and coding design with Python and Spark SQL**
+- Looking for help with **Understanding and mastering the basics of writing Neural Network code**
 
-- I'm going to be posting excerpts here from my personal Book of Knowledge (BoK) gathered while earning my certification in Data Engineering from IBM and Coursera.
-
-- In addition, I'm going to be working on a personal project: Developing a Trade Compliance Heat Map that utilizes data from the US EAR and HTC codes, along with the ITAR to identify components on an engineering BOM that may fall under export classification rules.
+- I'm going to be posting excerpts here from my personal Book of Knowledge (BoK) gathered while earning my certification in Machine Learning from IBM and Coursera.
 
 - I am a volunteer for and member of the Puget Sound Chapter of Project Management Institute, and a member of the Seattle ISACA chapter. 
 
